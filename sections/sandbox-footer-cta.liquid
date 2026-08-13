@@ -1,29 +1,16 @@
 {%- comment -%}
-  FIXTURE — DIVERGENT COPY, ADDITIVE SCHEMA (site-c only).
-
-  site-c's local version adds a schema setting that shopify-common does NOT
-  have: `hide_background`. This is the sandbox stand-in for the real decision
-  taken during the skinstylus migration — a site had extra, genuinely useful
-  schema options, and the ruling was that common wins and the extras are
-  dropped rather than merged.
-
-  Expected behaviour after a code deploy:
-    - This file is overwritten by common's version.
-    - `hide_background` vanishes from the theme editor.
-    - Any content JSON that set `hide_background` keeps the orphaned key
-      harmlessly (Shopify ignores unknown settings) — worth confirming, since
-      it is the thing people fear when dropping a setting.
+  Sandbox section 5 of 10 — DIVERGENCE TEST (schema-level).
+  site-c's repo gets a version with an EXTRA schema setting that common
+  does not have. This reproduces the skinstylus "minor diff / additive
+  schema option" case, where the decision was: common wins, extra option
+  is dropped. Asserting that the extra setting disappears after deploy.
 {%- endcomment -%}
 
 {% liquid
   assign s = section.settings
 %}
 
-<div
-  class="sandbox-footer-cta"
-  data-sandbox-origin="SITE-C-VERSION"
-  style="padding: {{ s.padding }}px 20px;{% unless s.hide_background %} background: #eef4ff;{% endunless %}"
->
+<div class="sandbox-footer-cta" data-sandbox-origin="COMMON-VERSION" style="padding: {{ s.padding }}px 20px;">
   {%- if s.heading != blank -%}
     <h2 class="sandbox-footer-cta__heading">{{ s.heading }}</h2>
   {%- endif -%}
@@ -42,7 +29,6 @@
     { "type": "text", "id": "heading", "label": "t:sections.sandbox-footer-cta.settings.heading", "default": "Ready to go?" },
     { "type": "text", "id": "cta_label", "label": "t:sections.sandbox-footer-cta.settings.cta_label", "default": "Get started" },
     { "type": "url", "id": "cta_url", "label": "t:sections.sandbox-footer-cta.settings.cta_url" },
-    { "type": "checkbox", "id": "hide_background", "label": "Hide background colour", "default": false },
     { "type": "range", "id": "padding", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "t:sections.sandbox-footer-cta.settings.padding", "default": 32 }
   ],
   "presets": [{ "name": "t:sections.sandbox-footer-cta.name" }]
